@@ -5,22 +5,21 @@ from openai import OpenAI
 import re
 from flask_mysqldb import MySQL
 import os
-
+app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 client = OpenAI(
     api_key=os.environ.get('OPENAI_API_KEY')
 )
-app = Flask(__name__)
+
 
 
 # 1 MySQL Configuration
-import os
 
-app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST', 'localhost')
-app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER', 'root')
-app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD', '6827')
-app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB', 'ai_code_mentor')
+app.config['MYSQL_HOST'] = os.environ.get('MYSQLHOST')
+app.config['MYSQL_USER'] = os.environ.get('MYSQLUSER')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQLPASSWORD')
+app.config['MYSQL_DB'] = os.environ.get('MYSQLDATABASE')
 
 mysql = MySQL(app)
 
