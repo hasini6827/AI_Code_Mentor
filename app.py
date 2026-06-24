@@ -2,14 +2,17 @@ from flask import Flask, render_template, request, jsonify, session, redirect
 import json
 from datetime import datetime
 from openai import OpenAI
-import config
 import re
 from flask_mysqldb import MySQL
+import os
 
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+
+client = OpenAI(
+    api_key=os.environ.get('OPENAI_API_KEY')
+)
 app = Flask(__name__)
-app.config['SECRET_KEY'] = config.secret_key
 
-client = OpenAI(api_key=config.api_key)
 
 # 1 MySQL Configuration
 import os
