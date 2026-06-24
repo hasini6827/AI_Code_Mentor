@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Code Mentor</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:radial-gradient(ellipse at bottom, #0b0f1a 0%, #000000 100%);
+overflow-x:hidden;
+}
+
+/* Shooting stars container */
+.stars{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+z-index:-1;
+}
+
+/* Shooting star */
+.star{
+position:absolute;
+width:2px;
+height:80px;
+background:linear-gradient(-45deg, white, rgba(255,255,255,0));
+opacity:0.8;
+transform:rotate(45deg);
+animation:shoot 3s linear infinite;
+}
+
+/* Animation */
+@keyframes shoot{
+0%{
+transform:translateX(0) translateY(0) rotate(45deg);
+opacity:1;
+}
+100%{
+transform:translateX(-1000px) translateY(1000px) rotate(45deg);
+opacity:0;
+}
+}
+
+/* NAVBAR */
+.logo{
+font-size:18px;
+font-weight:600;
+}
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#111827;
+color:white;
+padding:15px 40px;
+}
+
+.nav-right{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+.profile-icon{
+color:white;
+font-size:20px;
+text-decoration:none;
+}
+
+.profile-icon:hover{
+color:#60a5fa;
+}
+
+.logout-btn{
+background:#ef4444;
+color:white;
+padding:8px 14px;
+border-radius:6px;
+text-decoration:none;
+font-size:14px;
+}
+
+.logout-btn:hover{
+background:#dc2626;
+}
+
+/* LAYOUT */
+.workspace{
+display:flex;
+gap:30px;
+width:90%;
+max-width:1200px;
+margin:40px auto;
+}
+
+.left-panel{
+flex:2;
+}
+
+.right-panel{
+flex:1;
+background: rgba(255, 255, 255, 0.95);
+color:#05294d;
+padding:20px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+height:fit-content;
+}
+
+.editor-card{
+background: rgba(255, 255, 255, 0.95);
+padding:35px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+margin-bottom:25px;
+}
+
+textarea{
+width:100%;
+height:260px;
+padding:15px;
+border-radius:8px;
+border:1px solid #d1d5db;
+font-family:monospace;
+font-size:14px;
+resize:none;
+}
+
+button{
+margin-top:15px;
+padding:12px 20px;
+background:#0b0f1a;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:15px;
+}
+
+button:hover{
+background:#9ca3af;
+}
+
+button:disabled{
+background:#9ca3af;
+cursor:not-allowed;
+}
+
+.result-card{
+background: rgba(255, 255, 255, 0.95);
+color:#05294d;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+.result-card pre{
+white-space:pre-wrap;
+font-family:monospace;
+font-size:13px;
+}
+
+
+.analysis-title{
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.warning{
+color:#ef4444;
+font-weight:bold;
+}
+
+.hidden{
+display:none;
+}
+
+.loading{
+display:none;
+text-align:center;
+margin-top:20px;
+}
+
+.spinner{
+border:6px solid #f3f3f3;
+border-top:6px solid #2563eb;
+border-radius:50%;
+width:40px;
+height:40px;
+animation:spin 1s linear infinite;
+margin:auto;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Shooting Stars -->
+<div class="stars">
+  <div class="star" style="top:10%; left:80%; animation-delay:0s;"></div>
+  <div class="star" style="top:20%; left:60%; animation-delay:1s;"></div>
+  <div class="star" style="top:40%; left:90%; animation-delay:2s;"></div>
+  <div class="star" style="top:70%; left:70%; animation-delay:1.5s;"></div>
+  <div class="star" style="top:50%; left:85%; animation-delay:0.5s;"></div>
+</div>
+
+<div class="navbar">
+<div class="logo">AI Code Mentor</div>
+
+<div class="nav-right">
+<a href="/profile" class="profile-icon">
+<i class="fa-solid fa-user"></i>
+</a>
+<a href="/logout" class="logout-btn">Logout</a>
+</div>
+</div>
+
+<div class="workspace">
+
+<div class="left-panel">
+
+<div class="editor-card">
+<h2>Code Review Workspace</h2>
+
+<form id="reviewForm">
+<textarea name="code" placeholder="Write or paste your Python code here..." required></textarea>
+<button id="analyzeBtn" type="submit">Analyze Code</button>
+</form>
+
+<div id="loading" class="loading">
+<div class="spinner"></div>
+<p>Analyzing your code...</p>
+</div>
+
+</div>
+
+<div id="resultCard" class="result-card hidden">
+<h3>Friendly Review</h3>
+<pre id="reviewOutput"></pre>
+</div>
+
+</div>
+
+<div id="analysisPanel" class="right-panel hidden">
+
+<div class="analysis-title">Advanced Analysis</div>
+
+<p id="verdictDisplay"></p>
+<p id="confidenceDisplay"></p>
+<p id="aiWarning" class="warning"></p>
+<p id="timeComplexity"></p>
+<p id="spaceComplexity"></p>
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("reviewForm").onsubmit = async function(e){
+
+e.preventDefault();
+
+document.getElementById("analysisPanel").classList.add("hidden");
+document.getElementById("resultCard").classList.add("hidden");
+
+document.getElementById("verdictDisplay").innerText="";
+document.getElementById("confidenceDisplay").innerText="";
+document.getElementById("timeComplexity").innerText="";
+document.getElementById("spaceComplexity").innerText="";
+document.getElementById("aiWarning").innerText="";
+
+const button = document.getElementById("analyzeBtn");
+button.disabled=true;
+
+document.getElementById("loading").style.display="block";
+
+const formData=new FormData(this);
+
+const response=await fetch("/review",{
+method:"POST",
+body:formData
+});
+
+const data=await response.json();
+
+document.getElementById("loading").style.display="none";
+button.disabled=false;
+
+document.getElementById("resultCard").classList.remove("hidden");
+document.getElementById("analysisPanel").classList.remove("hidden");
+
+document.getElementById("reviewOutput").innerText=data.feedback;
+
+document.getElementById("verdictDisplay").innerText=
+"Verdict: "+data.verdict;
+
+document.getElementById("confidenceDisplay").innerText=
+"Confidence: "+data.confidence+"%";
+
+if(data.time_complexity){
+document.getElementById("timeComplexity").innerText=data.time_complexity;
+}
+
+if(data.space_complexity){
+document.getElementById("spaceComplexity").innerText=data.space_complexity;
+}
+
+document.getElementById("aiWarning").innerText=
+"AI Probability: "+data.plagiarism_probability+"%";
+
+};
+
+</script>
+
+</body>
+</html>

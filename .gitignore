@@ -1,0 +1,11 @@
+config.py
+__pycache__/
+*.pyc
+
+desktop.ini
+system_logs.json
+system_logs.jsonl
+
+*.pptx
+*.docx
+*.pdf

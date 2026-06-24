@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Profile | AI Code Mentor</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+margin:0;
+background:#f4f6f9;
+}
+
+.navbar{
+background:#111827;
+color:white;
+padding:15px 40px;
+display:flex;
+justify-content:space-between;
+}
+
+.container{
+width:90%;
+max-width:1100px;
+margin:auto;
+margin-top:40px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 10px 20px rgba(0,0,0,0.08);
+margin-bottom:30px;
+}
+
+.stats{
+display:flex;
+gap:20px;
+}
+
+.stat{
+flex:1;
+background:#f9fafb;
+padding:20px;
+border-radius:8px;
+text-align:center;
+}
+
+.stat h3{
+margin:5px 0;
+font-size:26px;
+}
+
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #e5e7eb;
+text-align:left;
+}
+
+th{
+background:#f3f4f6;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+<div> AI Code Mentor</div>
+<div>
+<a href="/" style="color:white;margin-right:20px;">Dashboard</a>
+<a href="/logout" style="color:white;">Logout</a>
+</div>
+</div>
+
+<div class="container">
+<div class="card">
+<h2>{{name}}'s Profile</h2>
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<p>Total Submissions</p>
+<h3>{{submissions}}</h3>
+</div>
+
+<div class="stat">
+<p>Total Errors</p>
+<h3>{{errors}}</h3>
+</div>
+
+<div class="stat">
+<p>Plagiarism Usage</p>
+<h3>{{plagiarism}}</h3>
+</div>
+
+</div>
+<div class="card">
+
+<h3> Leaderboard</h3>
+
+<table>
+
+<tr>
+<th>Rank</th>
+<th>Name</th>
+<th>Errors</th>
+<th>Plagiarism</th>
+</tr>
+
+{% for user in leaderboard %}
+
+<tr>
+<td>{{loop.index}}</td>
+<td>{{user[0]}}</td>
+<td>{{user[1]}}</td>
+<td>{{user[2]}}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+
+
+<div class="card">
+
+<h3> Submission History</h3>
+
+<table>
+
+<tr>
+<th>Verdict</th>
+<th>Confidence</th>
+<th>Plagiarism</th>
+<th>Probability</th>
+</tr>
+
+{% for item in history %}
+
+<tr>
+<td>{{item[0]}}</td>
+<td>{{item[1]}}%</td>
+<td>{{"Yes" if item[2] else "No"}}</td>
+<td>{{item[3] if item[2] else "-"}}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>
